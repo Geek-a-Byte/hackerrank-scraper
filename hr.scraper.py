@@ -41,7 +41,7 @@ r = s.post(login_url, cookies=cookie, data=payload, headers=head)
 print(r.status_code)
 
 
-url2='https://www.hackerrank.com/rest/hackers/geek_a_byte32/badges'
+url2='https://www.hackerrank.com/rest/hackers/<username>/badges'
 
 
 # Try to get a page behind the login page
