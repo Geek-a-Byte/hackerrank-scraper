@@ -14,52 +14,57 @@ login_url = 'https://www.hackerrank.com/auth/login'
 s = requests.session()
 
 # Open the login page
-r = s.get(url)
+r = s.get(login_url)
 
-print(r.status_code)
-# Get the csrf-token from meta tag
-soup = bs(r.text,'lxml')
-csrf_token = soup.select_one('meta[name="csrf-token"]')['content']
+# Check if the request was successful
+if r.status_code != 200:
+    print("Failed to fetch data from the Hackerrank API")
+else:
+    print(r.status_code)
+    # Get the csrf-token from meta tag
+    soup = bs(r.text,'lxml')
+    csrf_token = soup.select_one('meta[name="csrf-token"]')['content']
 
-# Get the page cookie
-cookie = r.cookies
+    # Get the page cookie
+    cookie = r.cookies
 
-# Set CSRF-Token
-head['X-CSRF-Token'] = csrf_token
-head['X-Requested-With'] = 'XMLHttpRequest'
+    # Set CSRF-Token
+    head['X-CSRF-Token'] = csrf_token
+    head['X-Requested-With'] = 'XMLHttpRequest'
 
-# Build the login payload
-payload = {
-'username': '', #<-- your username
-'password': '', #<-- your password
-'remember':'1' 
-}
+    # Build the login payload
+    payload = {
+    'username': '', #<-- your username
+    'password': '', #<-- your password
+    'remember':'1' 
+    }
 
-# Try to login to the page
-r = s.post(login_url, cookies=cookie, data=payload, headers=head)
+    # Try to login to the page
+    r = s.post(login_url, cookies=cookie, data=payload, headers=head)
 
-print(r.status_code)
-
-
-url2='https://www.hackerrank.com/rest/hackers/<username>/badges'
+    print(r.status_code)
 
 
-# Try to get a page behind the login page
-r = s.get(url2, headers=head)
+    url2='https://www.hackerrank.com/rest/hackers/<username>/badges' #<-- your username
 
-print(r.status_code)
 
-# # Check if login was successful
-soup = bs(r.text, 'lxml')
+    # Try to get a page behind the login page
+    r = s.get(url2, headers=head)
 
-# Parse the response JSON
-datum = r.json()['models']
+    print(r.status_code)
 
-total_count=0;
-# Print the parsed data
-for data in datum:
-    print(data['badge_name'],end=' ')
-    print(data['solved'])
-    total_count+=data['solved']
+    # # Check if login was successful
+    soup = bs(r.text, 'lxml')
 
-print(total_count)
+    # Parse the response JSON
+    datum = r.json()['models']
+
+    total_count=0;
+    # Print the parsed data
+    for data in datum:
+        print(data['badge_name'],end=' ')
+        print(data['solved'])
+        total_count+=data['solved']
+
+    print(total_count)
+
