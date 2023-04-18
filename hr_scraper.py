@@ -14,12 +14,6 @@ d = json.loads(headerString)
 #creating session
 s = requests.Session()
 
-# Build the login payload
-payload = {
-'username': '', #<-- your username
-'remember':'1' 
-}
-
 url2='https://www.hackerrank.com/rest/hackers/<username>/badges'
 
 # Try to get a page behind the login page
